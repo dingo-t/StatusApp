@@ -1,4 +1,4 @@
-import { View, Text, Image, TextInput, TouchableOpacity, Pressable, Alert } from 'react-native'
+import { View, Text, Image, TextInput, TouchableOpacity, Pressable, Alert, ActivityIndicator } from 'react-native'
 import React, { useRef, useState } from 'react'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { StatusBar } from 'expo-status-bar';
@@ -39,6 +39,11 @@ export default function SignIn() {
 
     }
   return (
+    loading? (
+      <View className="fex items-center" style={{top: hp(30)}}>
+          <ActivityIndicator size='large' />
+      </View> 
+  ):(
     <CustomKeyboardView>
       <StatusBar style="dark" />
       <View className="flex-1 gap-12">
@@ -87,7 +92,7 @@ export default function SignIn() {
                         Sign in
                       </Text>
                     </TouchableOpacity>
-             
+
             </View>
 
           
@@ -101,11 +106,12 @@ export default function SignIn() {
               </Pressable>
              
             </View>
-
+       
           </View>
         </View>
-
+        <Text className="text-center align-bottom"> Artwork by Samui / Shutterstock.com</Text>
+        <Text className="text-center align-bottom"> Icons by Octicons, Feather, FontAwesome5, Entypo and AntDesign</Text>
       </View>
       </CustomKeyboardView>
-  )
+  ))
 }

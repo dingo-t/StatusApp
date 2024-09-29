@@ -25,7 +25,6 @@ export default function HomeHeader({title}) {
     const {top} = useSafeAreaInsets();
 
     const handleProfile = ()=> {
-      
     }
 
     const handleLogout = async ()=> {
@@ -46,7 +45,7 @@ export default function HomeHeader({title}) {
 
 
   return (
-    <View style={{paddingTop: ios? top:top+10}} className="flex-row justify-between px-5 bg-indigo-400 pb-6 rounded-b-3xl shadow">
+    <View style={{paddingTop: ios? top:top+10}} className="flex-row justify-between px-5 bg-indigo-300 pb-6 rounded-b-3xl shadow">
       <View>
         <Text style={{fontSize: hp(3)}} className="font-medium text-white">{title}</Text>
       </View>
@@ -80,35 +79,35 @@ export default function HomeHeader({title}) {
               text="Profile"
               action={handleProfile}
               value={null}
-          
+              icon={<Feather name="user" size={hp(2.5)} color="#737373" />}
             />
             <Divider />
             <MenuItem 
               text="Friends"
               action={navigateToFriends}
               value={null}
-         
+              icon={<FontAwesome5 name="user-friends" size={hp(2.5)} color="#737373" />}
             />
             <Divider />
             <MenuItem 
               text="Chat"
               action={navigateToChat}
               value={null}
-           
+              icon={<Entypo name="chat" size={hp(2.5)} color="#737373" />}
             />
             <Divider />
             <MenuItem 
               text="Map"
               action={navigateToMap}
               value={null}
-             
+              icon={<Entypo name="map" size={hp(2.5)} color="#737373" />}
             />
             <Divider />
             <MenuItem 
               text="Sign Out"
               action={handleLogout}
               value={null}
-      
+              icon={<AntDesign name="logout" size={hp(2.5)} color="#737373" />}
             />
         </MenuOptions>
       </Menu>

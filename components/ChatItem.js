@@ -78,11 +78,11 @@ export default function ChatItem({item, router, currentUser}) {
             <View className="flex-row justify-between">
                 <Text style={{fontSize: hp(1.8)}} className="font-semibold text-neutral-800">{item?.username}</Text>
                 <Text style={{fontSize: hp(1.6)}} className="font-medium text-neutral-500">
-                   {/*  {renderTime()} */}
+                    {renderTime()}
                 </Text>
             </View>
             <Text style={{fontSize: hp(1.6)}} className="font-medium text-neutral-500">
-              {/*   {renderLastMessage()} */}
+                {renderLastMessage()}
             </Text>
         </View>
     </TouchableOpacity>

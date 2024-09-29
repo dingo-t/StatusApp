@@ -30,6 +30,7 @@ export const AuthContextProvider = ({children})=>{
          return unsub;
     },[]);
 
+    // the user state is updated with data that will be needed throughout the app
     const updateUserData = async (userdata, userId)=>{
         const docRef = doc(db, 'users', userId);
         const docSnap = await getDoc(docRef);
@@ -40,6 +41,7 @@ export const AuthContextProvider = ({children})=>{
         }
     }
 
+    // the users authentication details are checked
     const login = async (email, password)=>{
         try{
             const response = await signInWithEmailAndPassword(auth, email, password);
@@ -51,6 +53,8 @@ export const AuthContextProvider = ({children})=>{
             return {success: false, msg};
         }
     }
+
+    // the function calls the firebase signOut function 
     const logout = async (email, password)=>{
         try{
             await signOut(auth);
@@ -59,6 +63,8 @@ export const AuthContextProvider = ({children})=>{
             return {success: false, msg: e.message, error: e};
         }
     }
+
+    // the user is created along with the verification files.
     const register = async (email, password, username, profileUrl)=>{
         try{
             const response = await createUserWithEmailAndPassword(auth, email, password);
@@ -85,7 +91,7 @@ export const AuthContextProvider = ({children})=>{
         }
     }
 
-
+    // important values and function are passed to the rest of the app
     return (
         <AuthContext.Provider value={{user, isAuthenticated, login, register, logout}}>
             {children}
@@ -93,11 +99,8 @@ export const AuthContextProvider = ({children})=>{
     )
 }
 
+// the creates a function that allows certain states to be accessed from anywhere inside the authcontext
 export const useAuth = ()=>{
     const value = useContext(AuthContext);
-
-    if(!value){
-        throw new Error('useAuth needs to be wrapped inside auth context provider')
-    }
     return value;
 }

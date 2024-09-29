@@ -60,8 +60,7 @@ const getUsers = async () => {
             <ChatList currentUser={user} users={users} />
         ):(
             <View className="fex items-center" style={{top: hp(30)}}>
-                <Text>You have no Friends Currently</Text>
-                
+                <ActivityIndicator size='large' />
             </View> 
         )
       }

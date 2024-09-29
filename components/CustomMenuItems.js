@@ -10,7 +10,7 @@ export const MenuItem = ({text, action, value, icon})=>{
                 <Text style={{fontSize: hp(1.7)}} className="font-semibold text-neutral-600">
                     {text}
                 </Text>
-               
+               {icon}
             </View>
         </MenuOption>
     )

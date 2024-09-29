@@ -37,7 +37,7 @@ export default function ChatRoom() {
       const messagesRef = collection(docRef, "messages");
       const q = query(messagesRef, orderBy('createdAt', 'asc'));
 
-      // the orded message data is added to the local state variable
+      // the ordered message data is added to the local state variable
       let unsub = onSnapshot(q, (snapshot)=>{
           let allMessages = snapshot.docs.map(doc=>{
             return doc.data();
@@ -63,9 +63,10 @@ export default function ChatRoom() {
       updateScrollView();
     },[messages])
 
-    // this function scrolls the user to the bottom of the page automatically when a new user is added
+    // this function scrolls the user to the bottom of the page automatically when a new message is added
     const updateScrollView = ()=>{
       setTimeout(()=>{
+        // setting animated to true makes the page scroll down smoothly instead of instantly
         scrollViewRef?.current?.scrollToEnd({animated: true})
       },100)
     }
@@ -73,10 +74,12 @@ export default function ChatRoom() {
 
      // This function creates a firebase document to save and receive the messages sent between users
     const createRoomIfNotExsists = async ()=>{
+        // the id of the room is created the ids of both users
         let roomId = getRoomId(user?.userId, item?.userId);
+        // the room is created and the time is recorded
         await setDoc(doc(db, "rooms", roomId), {
             roomId,
-            CreateAt: Timestamp.fromDate(new Date())
+            CreatedAt: Timestamp.fromDate(new Date())
         });
     }
 
@@ -84,14 +87,19 @@ export default function ChatRoom() {
     const handleSendMessage = async ()=>{
       // gets message from the input field
       let message = textRef.current.trim();
+      // if the message is undefined the function exits
       if(!message) return;
       try{
+        // the current roomId is found from the user and friend ids
         let roomId = getRoomId(user?.userId, item?.userId);
         const docRef = doc(db, 'rooms', roomId);
+        // the messages collection inside the room document is found
         const messagesRef = collection(docRef, "messages")
+        // the textRef variable is reset and the input field cleared
         textRef.current = "";
         if(inputRef) inputRef?.current?.clear();
 
+        // a new message document is added to the messages collection for the current room
         const newDoc = await addDoc(messagesRef, {
             userId: user?.userId,
             text: message,

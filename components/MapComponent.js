@@ -94,8 +94,13 @@ const getUsers = async () => {
 
   //console.log("users locations", users)
 
- 
-
+  if (loading) {
+    return (
+      <View className="fex items-center" style={{top: hp(30)}}>
+          <ActivityIndicator size='large' />
+      </View> 
+    );
+  }
   return (
     <View>
         <MapView
@@ -123,7 +128,7 @@ const getUsers = async () => {
                   borderColor: 'white',
                 }}
               />
-              <Text style={{ fontSize: 12, color: 'white', textAlign: 'center' }}>
+              <Text style={{ fontSize: 12, textAlign: 'center' , color: 'white'}}>
                 {users.username}
               </Text>
             </View>

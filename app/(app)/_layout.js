@@ -9,7 +9,9 @@ export default function _layout() {
     <Stack>
     {/*  each Stack.Screen element creates the header for its assigned page */}
       <Stack.Screen
+        // the name property sets the router for which the header will be rendered for
         name="home"
+        // the title prop sets the title of the page
         options={{
           header: ()=> <HomeHeader title="Home"/>
         }}
