@@ -17,24 +17,28 @@ export default function Home() {
   const {logout, user} = useAuth();
   const [users, setUsers] = useState([]);
 
-
+  // the users array is updated whenever the component is rendered to ensure the information is up to date
   useEffect(() => {
     if (user?.uid) {
         getUsers();
     }
 }, [user]);
 
+// users data is retreived from the database
 const getUsers = async () => {
     try {
-     
+        // references the current users document in the users collection
         const userDoc = await getDoc(doc(db, 'users', user.uid)); 
+        // each friends variable in the current users document is mapped into the friends constant
         const friends = userDoc.data()?.friends || []; 
 
+        // if there are 0 friends the function will return
         if (friends.length === 0) {
             setUsers([]); 
             return;
         }
 
+        
         const q = query(usersRef, where('userId', 'in', friends)); 
 
         const querySnapshot = await getDocs(q);

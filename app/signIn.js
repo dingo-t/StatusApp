@@ -87,7 +87,7 @@ export default function SignIn() {
 
             <View>
            
-                    <TouchableOpacity onPress={handleLogin} style={{backgroundColor: "#5252ad", marginHorizontal: wp(5), borderRadius: 13,  justifyContent: 'center', alignItems: 'center', height: hp(6.5)}} >
+                    <TouchableOpacity onPress={handleLogin} style={{backgroundColor: "#037c6e", marginHorizontal: wp(5), borderRadius: 13,  justifyContent: 'center', alignItems: 'center', height: hp(6.5)}} >
                       <Text style={{fontSize: hp(2.7), }} className="text-white font-bold tracking-wider">
                         Sign in
                       </Text>
@@ -102,7 +102,7 @@ export default function SignIn() {
             <View className="flex-row justify-center">
                 <Text style={{fontSize: hp(1.8)}} className="font-semibold text-neutral-500">Don't have an account? </Text>
               <Pressable onPress={()=> router.push('signUp')}>
-                <Text style={{fontSize: hp(1.8)}} className="font-bold text-indigo-500">Sign Up</Text>
+                <Text style={{fontSize: hp(1.8)}} className="font-bold text-indigo-700">Sign Up</Text>
               </Pressable>
              
             </View>

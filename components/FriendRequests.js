@@ -12,6 +12,7 @@ const FriendRequests = () => {
   const [requests, setRequests] = useState([]);
   const {user} = useAuth();
 
+  
 
 const fetchFriendRequests =  async () => {
     const currentUser = user?.userId;
@@ -32,6 +33,8 @@ const fetchFriendRequests =  async () => {
          // console.log('Friend Requests: ', friendRequests);
           setRequests(friendRequests);
           return friendRequests;
+
+
         } else {
           console.log('User not authenticated');
         }
@@ -90,7 +93,6 @@ try {
   } catch (error) {
     console.error('Error removing document: ', error);
   }
-
 }
 
   const renderRequest = ({ item }) => (

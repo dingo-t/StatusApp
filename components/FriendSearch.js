@@ -12,6 +12,10 @@ export default function FriendSearch() {
   const [loading, setLoading] = useState(true); 
   
 
+  
+
+
+
   useEffect(() => {
     const getUsers = async () => {
       const q = query(collection(db, 'users'), where('userId', '!=', user?.uid));
@@ -63,7 +67,7 @@ export default function FriendSearch() {
     <View style={{ padding: 10, borderBottomWidth: 1, borderColor: '#ccc' }}>
       <Text>{item.username}</Text>
       <Text>{item.userId}</Text>
-      <Pressable onPress={() => addFriend(item.userId, item.username, item.profileUrl)} style={{ backgroundColor: '#007bff', padding: 10, borderRadius: 5, marginTop: 5 }}>
+      <Pressable onPress={() => addFriend(item.userId, item.username, item.profileUrl)} style={{ backgroundColor: '#037c6e', padding: 10, borderRadius: 5, marginTop: 5 }}>
         <Text style={{ color: 'white' }}>Add Friend</Text>
       </Pressable>
     </View>
