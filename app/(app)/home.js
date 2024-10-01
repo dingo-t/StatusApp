@@ -17,13 +17,6 @@ export default function Home() {
   const {logout, user} = useAuth();
   const [users, setUsers] = useState([]);
 
-  // the users array is updated whenever the component is rendered to ensure the information is up to date
-  useEffect(() => {
-    if (user?.uid) {
-        getUsers();
-    }
-}, [user]);
-
 // users data is retreived from the database
 const getUsers = async () => {
     try {
@@ -38,9 +31,10 @@ const getUsers = async () => {
             return;
         }
 
-        
+        // gets the userid of every friend from the friends object
         const q = query(usersRef, where('userId', 'in', friends)); 
 
+        // the query previously defined is now run
         const querySnapshot = await getDocs(q);
         let data = [];
         querySnapshot.forEach((doc) => {
@@ -53,13 +47,20 @@ const getUsers = async () => {
     }
 };
 
+  // the users array is updated whenever the component is rendered to ensure the information is up to date
+  useEffect(() => {
+    if (user?.uid) {
+        getUsers();
+    }
+  }, [user]);
+
   console.log(users)
 
   return (
     <View className="flex-1 bg-white">
       <StatusBar style='light' />
 
-      {
+      { /* before the users have been retreived from the database a loading screen will be rendered */
         users.length>0? (
             <ChatList currentUser={user} users={users} />
         ):(

@@ -4,19 +4,19 @@ import { useAuth } from '../context/authContext';
 import { query, where, getDocs, collection, doc, deleteDoc, updateDoc, arrayUnion } from 'firebase/firestore';
 import { auth, db, } from '../firebaseConfig'; 
 
-
-
-
-
+// this component renders out each request that has been sent to the current user
+// it also allows the user to accept or decline requests
 const FriendRequests = () => {
   const [requests, setRequests] = useState([]);
   const {user} = useAuth();
 
   
-
+// this function retreives the friend requests for the current user 
 const fetchFriendRequests =  async () => {
     const currentUser = user?.userId;
     try {
+        // if the user has an id the friendRequests collection will be scanned for documents
+        // where the id of the receiver equals the id of the current user
         if (currentUser) {
           const q = query(
             collection(db, 'friendRequests'), 
@@ -24,7 +24,7 @@ const fetchFriendRequests =  async () => {
           );
     
           const querySnapshot = await getDocs(q);
-
+          // each friend request is pushed to the friendRequests state
           let friendRequests = [];
           querySnapshot.forEach((doc) => {
             friendRequests.push({ id: doc.id, ...doc.data() });
@@ -41,23 +41,20 @@ const fetchFriendRequests =  async () => {
       } catch (error) {
         console.error('Error fetching friend requests:', error);
       }
-}
+    }
 
-
-  useEffect(() => {
-    fetchFriendRequests();
-}, []);
-
-    
+// this function handles the acceptance of a friend request
 const handleAccept =  async (senderId, receiverId) => {
     try {
-
+        // the user data of the current user is found
         const userDocRef = doc(db, 'users', receiverId);
     
+        // the id of the sender is added to the friends object in the users document
         await updateDoc(userDocRef, {
           friends: arrayUnion(senderId), 
         });
 
+        // the same is then done for the user who sent the message
         const friendDocRef = doc(db, 'users', senderId);
     
         await updateDoc(friendDocRef, {
@@ -69,31 +66,37 @@ const handleAccept =  async (senderId, receiverId) => {
       } catch (error) {
         console.error('Error adding friend: ', error);
       }
-
+      // the handle decline function is then called to delete the request since it is no longer needed
       handleDecline(senderId, receiverId);
-}
+    }
 
 
 
+  // this function deletes the friend request sent to the user 
+  const handleDecline =  async (senderId, receiverId) => {
 
-const handleDecline =  async (senderId, receiverId) => {
+      console.log('paramscheck', senderId, receiverId);
 
-    console.log('paramscheck', senderId, receiverId);
+      // the parameters are added together to get the id of the request
+      const FriendRequestDocName = `${senderId}-${receiverId}`;
 
-    const FriendRequestDocName = `${senderId}-${receiverId}`;
+      console.log('var check', FriendRequestDocName);
 
-    console.log('var check', FriendRequestDocName);
+  try {
+      const docRef = doc(db, 'friendRequests', FriendRequestDocName)
+      // the document is found and deleted
+      await deleteDoc(docRef);
 
-try {
-    const docRef = doc(db, 'friendRequests', FriendRequestDocName)
-
-    await deleteDoc(docRef);
-
-    console.log('Document successfully deleted!');
-  } catch (error) {
-    console.error('Error removing document: ', error);
+      console.log('Document successfully deleted!');
+    } catch (error) {
+      console.error('Error removing document: ', error);
+    }
   }
-}
+
+  useEffect(() => {
+    fetchFriendRequests();
+  }, []);
+
 
   const renderRequest = ({ item }) => (
     <View style={{ 

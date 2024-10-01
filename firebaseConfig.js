@@ -1,6 +1,5 @@
 
 import { initializeApp } from "firebase/app";
-
 import {getReactNativePersistence, initializeAuth} from 'firebase/auth';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {collection, getFirestore} from 'firebase/firestore'
@@ -22,6 +21,7 @@ export const auth = initializeAuth(app, {
     persistence: getReactNativePersistence(AsyncStorage)
 });
 
+// the database reference is exported
 export const db = getFirestore(app);
 
 // references to the most commonly accessed collections are exported for easy use throughout the app

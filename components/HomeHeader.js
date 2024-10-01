@@ -17,13 +17,15 @@ import { useRouter } from 'expo-router';
 
 const ios = Platform.OS=='ios';
 
-
+// the home header is a header than is used throughout the app
 export default function HomeHeader({title}) {
     
     const router = useRouter();
     const {user, logout} = useAuth();
     const {top} = useSafeAreaInsets();
 
+
+    // these functions handle the navigation to each page
     const handleProfile = ()=> {
     }
 

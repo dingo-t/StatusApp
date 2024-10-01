@@ -4,6 +4,8 @@ import { getDocs, query, collection, where, setDoc, doc } from 'firebase/firesto
 import { db } from '../firebaseConfig'; 
 import { useAuth } from '../context/authContext'; 
 
+
+// this component allows users to search for and add friends
 export default function FriendSearch() {
   const { user } = useAuth(); 
   const [users, setUsers] = useState([]); 
@@ -11,11 +13,39 @@ export default function FriendSearch() {
   const [filteredUsers, setFilteredUsers] = useState([]); 
   const [loading, setLoading] = useState(true); 
   
+  // when the add friend button is pressed this function is called to create the friend request
+  const addFriend = async (friendId, friendUsername) => {
+    try {
+      // friend request structure
+      const friendRequest = {
+        senderId: user?.uid,
+        senderUsername: user?.username,
+        senderProfileUrl: user?.profileUrl,
+        receiverId: friendId,
+        receiverUsername: friendUsername,
+        status: 'pending',
+        timestamp: new Date(),
+      };
+      // the document is created
+      await setDoc(doc(db, 'friendRequests', user?.uid + '-' + friendId), friendRequest);
+      alert('Friend request sent!');
+    } catch (error) {
+      console.error('Error sending friend request:', error);
+    }
+  };
 
+  const renderUserItem = ({ item }) => (
+    <View style={{ padding: 10, borderBottomWidth: 1, borderColor: '#ccc' }}>
+      <Text>{item.username}</Text>
+      <Text>{item.userId}</Text>
+      <Pressable onPress={() => addFriend(item.userId, item.username, item.profileUrl)} style={{ backgroundColor: '#037c6e', padding: 10, borderRadius: 5, marginTop: 5 }}>
+        <Text style={{ color: 'white' }}>Add Friend</Text>
+      </Pressable>
+    </View>
+  );
   
 
-
-
+  // the users state is set with data retreived from the database
   useEffect(() => {
     const getUsers = async () => {
       const q = query(collection(db, 'users'), where('userId', '!=', user?.uid));
@@ -31,7 +61,7 @@ export default function FriendSearch() {
     getUsers();
   }, [user?.uid]);
 
-
+// the search inputs are filtered as to not be case sensitive
   useEffect(() => {
     if (searchTerm === '') {
       setFilteredUsers(users);
@@ -42,37 +72,6 @@ export default function FriendSearch() {
       setFilteredUsers(filtered);
     }
   }, [searchTerm, users]);
-
-
-  const addFriend = async (friendId, friendUsername) => {
-    try {
-      const friendRequest = {
-        senderId: user?.uid,
-        senderUsername: user?.username,
-        senderProfileUrl: user?.profileUrl,
-        receiverId: friendId,
-        receiverUsername: friendUsername,
-        status: 'pending',
-        timestamp: new Date(),
-      };
-      await setDoc(doc(db, 'friendRequests', user?.uid + '-' + friendId), friendRequest);
-      alert('Friend request sent!');
-    } catch (error) {
-      console.error('Error sending friend request:', error);
-    }
-  };
-
-
-  const renderUserItem = ({ item }) => (
-    <View style={{ padding: 10, borderBottomWidth: 1, borderColor: '#ccc' }}>
-      <Text>{item.username}</Text>
-      <Text>{item.userId}</Text>
-      <Pressable onPress={() => addFriend(item.userId, item.username, item.profileUrl)} style={{ backgroundColor: '#037c6e', padding: 10, borderRadius: 5, marginTop: 5 }}>
-        <Text style={{ color: 'white' }}>Add Friend</Text>
-      </Pressable>
-    </View>
-  );
-
 
 
   return (

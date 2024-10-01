@@ -12,54 +12,51 @@ import * as Location from 'expo-location';
 export default function MapComponent() {
 
   const [loading, setloading] = useState(true);
-
+  const [userLocation, setuserLocation] = useState();
+  const [usersLocations, setusersLocations] = useState();
   const {user} = useAuth();
   const [users, setUsers] = useState([]);
-  
-  useEffect(() => {
-    if (user?.uid) {
-        getUsers();
-    }
-}, [user]);
+    
+  const getUsers = async () => {
+      try {
+          // references the current users document in the users collection
+          const userDoc = await getDoc(doc(db, 'users', user.uid)); 
+          // each friends variable in the current users document is mapped into the friends constant
+          const friends = userDoc.data()?.friends || []; 
 
-const getUsers = async () => {
-    try {
-        const userDoc = await getDoc(doc(db, 'users', user.uid)); 
-        const friends = userDoc.data()?.friends || []; 
+          // if there are 0 friends the function will return
+          if (friends.length === 0) {
+              setUsers([]); 
+              return;
+          }
 
-        if (friends.length === 0) {
-            setUsers([]); 
-            return;
-        }
+          // gets the userid of every friend from the friends object
+          const q = query(usersRef, where('userId', 'in', friends)); 
 
-        const q = query(usersRef, where('userId', 'in', friends)); 
+          // the query previously defined is now run
+          const querySnapshot = await getDocs(q);
+          let data = [];
+          querySnapshot.forEach((doc) => {
+              data.push({ ...doc.data() });
+          });
 
-        const querySnapshot = await getDocs(q);
-        let data = [];
-        querySnapshot.forEach((doc) => {
-            data.push({ ...doc.data() });
-        });
+          setUsers(data); 
+      } catch (error) {
+          console.error('Error fetching users:', error);
+      }
+  };
 
-        setUsers(data); 
-    } catch (error) {
-        console.error('Error fetching users:', error);
-    }
-};
 
   //console.log(users)
   
-
-
-
-  const [userLocation, setuserLocation] = useState();
-  const [usersLocations, setusersLocations] = useState();
-
+  // this function asks for permission to retrieve the users location
   const getUserLocation = async () => {
 
     let {status} = await Location.requestForegroundPermissionsAsync(); 
     if (status !== 'granted') {
         Alert.alert('Location Access Denied');
     }
+    // the users location is recorded
     let location = await Location.getCurrentPositionAsync({enableHighAccuracy: true});
     setuserLocation({
         latitude: location.coords.latitude,
@@ -67,7 +64,7 @@ const getUsers = async () => {
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
     });
-
+    // it is then updated int the database so others users can see where they are
     try {
         const userLocationRef = doc(db, 'users', user?.userId);
 
@@ -85,7 +82,12 @@ const getUsers = async () => {
    setloading(false);
   }
 
-
+   // the getUsers function is called every time the component renders to ensure info is up to date
+   useEffect(() => {
+    if (user?.uid) {
+        getUsers();
+    }
+}, [user]);
 
 
   useEffect(() => {

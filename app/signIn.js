@@ -38,7 +38,7 @@ export default function SignIn() {
       }
 
     }
-  return (
+  return ( /* the loading icon is rendered until the data has been retreived  */
     loading? (
       <View className="fex items-center" style={{top: hp(30)}}>
           <ActivityIndicator size='large' />
@@ -108,7 +108,7 @@ export default function SignIn() {
             </View>
        
           </View>
-        </View>
+        </View> {/* attributions */}
         <Text className="text-center align-bottom"> Artwork by Samui / Shutterstock.com</Text>
         <Text className="text-center align-bottom"> Icons by Octicons, Feather, FontAwesome5, Entypo and AntDesign</Text>
       </View>
